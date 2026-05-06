@@ -295,14 +295,18 @@ h2 {
 .marker-order {
   display: grid;
   place-items: center;
-  width: 1.35rem;
-  height: 1.35rem;
-  margin-bottom: -0.4rem;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: -0.25rem;
+  border: 2px solid rgba(17, 16, 22, 0.9);
   border-radius: 999px;
-  background: #f7f8ff;
+  background: linear-gradient(135deg, #ffffff, #ffe66f);
   color: #111016;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 900;
+  box-shadow:
+    0 0 0 2px rgba(255, 230, 111, 0.35),
+    0 0 1.25rem rgba(255, 230, 111, 0.62);
 }
 
 .marker-code {
