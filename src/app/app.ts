@@ -7,6 +7,7 @@ type TempleElement = {
   key: ElementKey;
   label: string;
   tone: string;
+  icon: 'earth' | 'fire' | 'wind' | 'ice';
 };
 
 type TempleRoute = {
@@ -23,10 +24,10 @@ type SymbolPosition = {
 const STORAGE_KEY = 'serpent-temple-session';
 
 const ELEMENTS: TempleElement[] = [
-  { key: 'pamant', label: 'Pamant', tone: '#d8d000' },
-  { key: 'foc', label: 'Foc', tone: '#ff3030' },
-  { key: 'vant', label: 'Vant', tone: '#19d452' },
-  { key: 'gheata', label: 'Gheata', tone: '#2236ff' },
+  { key: 'pamant', label: 'Pamant', tone: '#d8d000', icon: 'earth' },
+  { key: 'foc', label: 'Foc', tone: '#ff3030', icon: 'fire' },
+  { key: 'vant', label: 'Vant', tone: '#19d452', icon: 'wind' },
+  { key: 'gheata', label: 'Gheata', tone: '#2236ff', icon: 'ice' },
 ];
 
 const ROUTES: Record<ElementKey, TempleRoute> = {
