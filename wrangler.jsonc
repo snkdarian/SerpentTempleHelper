@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "serpent-temple-helper",
+  "compatibility_date": "2026-05-06",
+  "assets": {
+    "directory": "./dist/serpent-temple-helper/browser",
+    "not_found_handling": "single-page-application"
+  }
+}
