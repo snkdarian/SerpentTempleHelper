@@ -1,0 +1,75 @@
+<main class="app-shell">
+  <section class="control-panel" aria-labelledby="app-title">
+    <div class="title-block">
+      <p class="eyebrow">Serpent Temple Helper</p>
+      <h1 id="app-title">Alege elementul initial</h1>
+    </div>
+
+    <div class="element-grid" aria-label="Elemente disponibile">
+      @for (element of elements; track element.key) {
+        <button
+          class="element-button"
+          type="button"
+          [class.active]="selectedElement() === element.key"
+          [style.--element-color]="element.tone"
+          [attr.aria-pressed]="selectedElement() === element.key"
+          (click)="selectElement(element.key)"
+        >
+          <span class="button-orb"></span>
+          <span>{{ element.label }}</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="sequence-panel" aria-live="polite">
+    @if (selectedElementInfo(); as selected) {
+      <div class="sequence-header">
+        <div>
+          <p class="eyebrow">Primul element</p>
+          <h2 [style.color]="selected.tone">{{ selected.label }}</h2>
+        </div>
+
+        <button class="ghost-button" type="button" (click)="resetSelection()">
+          Reseteaza
+        </button>
+      </div>
+
+      <div class="sequence-line element-sequence" aria-label="Ordinea elementelor">
+        @for (step of elementSequenceSteps(); track step.id) {
+          <span class="sequence-item">
+            <span class="step-index">{{ step.order }}</span>
+            <span class="sequence-token" [style.color]="step.tone">
+              {{ step.label }}
+            </span>
+          </span>
+        }
+      </div>
+
+      <div class="position-board" aria-label="Reprezentarea pozitiilor">
+        <div class="board-axis top-left">Stanga</div>
+        <div class="board-axis top-right">Dreapta</div>
+        <div class="board-guide horizontal upper"></div>
+        <div class="board-guide horizontal lower"></div>
+        <div class="board-guide vertical"></div>
+
+        @for (marker of boardMarkers(); track marker.code) {
+          <div
+            class="board-marker"
+            [style.grid-column]="marker.column"
+            [style.grid-row]="marker.row"
+          >
+            <span class="marker-order">{{ marker.order }}</span>
+            <span class="marker-code">{{ marker.code }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p class="eyebrow">Start</p>
+        <h2>Selecteaza Pamant, Foc, Vant sau Gheata (primul element).</h2>
+        <p>Secventa potrivita apare aici si ramane salvata in browser.</p>
+      </div>
+    }
+  </section>
+</main>
