@@ -57,6 +57,14 @@
         </button>
       }
     </div>
+
+    <aside class="info-callout" aria-label="Informatii despre ordinea cheilor">
+      <span class="info-icon" aria-hidden="true">!</span>
+      <p>
+        Numerele de deasupra codurilor <strong>SS/DS/SM/DM/SJ/DJ </strong> arata ordinea in care
+        trebuie pusa cheia.
+      </p>
+    </aside>
   </section>
 
   <section class="sequence-panel" aria-live="polite">
@@ -132,12 +140,21 @@
 
         @for (marker of boardMarkers(); track marker.code) {
           <div
-            class="board-marker"
+            class="board-slot"
+            [class.left-side]="marker.column === 1"
+            [class.right-side]="marker.column === 2"
             [style.grid-column]="marker.column"
             [style.grid-row]="marker.row"
           >
-            <span class="marker-order">{{ marker.order }}</span>
-            <span class="marker-code">{{ marker.code }}</span>
+            <div class="marker-label">
+              <span>{{ marker.sideLabel }}</span>
+              <strong>{{ marker.levelLabel }}</strong>
+            </div>
+
+            <div class="board-marker">
+              <span class="marker-order">{{ marker.order }}</span>
+              <span class="marker-code">{{ marker.code }}</span>
+            </div>
           </div>
         }
       </div>

@@ -19,6 +19,8 @@ type SymbolPosition = {
   code: SymbolCode;
   column: 1 | 2;
   row: 1 | 2 | 3;
+  sideLabel: 'Stanga' | 'Dreapta';
+  levelLabel: 'Sus' | 'Mijloc' | 'Jos';
 };
 
 const STORAGE_KEY = 'serpent-temple-session';
@@ -50,12 +52,12 @@ const ROUTES: Record<ElementKey, TempleRoute> = {
 };
 
 const SYMBOL_POSITIONS: Record<SymbolCode, SymbolPosition> = {
-  ss: { code: 'ss', column: 1, row: 1 },
-  sm: { code: 'sm', column: 1, row: 2 },
-  sj: { code: 'sj', column: 1, row: 3 },
-  ds: { code: 'ds', column: 2, row: 1 },
-  dm: { code: 'dm', column: 2, row: 2 },
-  dj: { code: 'dj', column: 2, row: 3 },
+  ss: { code: 'ss', column: 1, row: 1, sideLabel: 'Stanga', levelLabel: 'Sus' },
+  sm: { code: 'sm', column: 1, row: 2, sideLabel: 'Stanga', levelLabel: 'Mijloc' },
+  sj: { code: 'sj', column: 1, row: 3, sideLabel: 'Stanga', levelLabel: 'Jos' },
+  ds: { code: 'ds', column: 2, row: 1, sideLabel: 'Dreapta', levelLabel: 'Sus' },
+  dm: { code: 'dm', column: 2, row: 2, sideLabel: 'Dreapta', levelLabel: 'Mijloc' },
+  dj: { code: 'dj', column: 2, row: 3, sideLabel: 'Dreapta', levelLabel: 'Jos' },
 };
 
 type SavedSession = {
