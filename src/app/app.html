@@ -1,169 +1,319 @@
 <main class="app-shell">
-  <section class="control-panel" aria-labelledby="app-title">
-    <div class="title-block">
-      <p class="eyebrow">Serpent Temple Helper</p>
-      <h1 id="app-title">Alege elementul initial</h1>
-    </div>
+  <nav class="app-tabs" aria-label="Aplicatii disponibile">
+    <button
+      class="tab-button"
+      type="button"
+      [class.active]="activeTab() === 'temple'"
+      [attr.aria-current]="activeTab() === 'temple' ? 'page' : null"
+      (click)="selectTab('temple')"
+    >
+      Serpent Temple
+    </button>
+    <button
+      class="tab-button"
+      type="button"
+      [class.active]="activeTab() === 'next'"
+      [attr.aria-current]="activeTab() === 'next' ? 'page' : null"
+      (click)="selectTab('next')"
+    >
+      Catch the King Helper
+    </button>
+  </nav>
 
-    <div class="element-grid" aria-label="Elemente disponibile">
-      @for (element of elements; track element.key) {
-        <button
-          class="element-button"
-          type="button"
-          [class.active]="selectedElement() === element.key"
-          [style.--element-color]="element.tone"
-          [attr.aria-pressed]="selectedElement() === element.key"
-          (click)="selectElement(element.key)"
-        >
-          <span class="element-icon" [class]="element.icon" aria-hidden="true">
-            @switch (element.icon) {
-              @case ('earth') {
-                <svg viewBox="0 0 24 24">
-                  <path class="icon-fill" d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
-                  <path d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
-                  <path d="M9.1 9.2 11.1 12.6 14.2 6.5"></path>
-                  <path d="M7 18c1.3-2.1 2.9-3.1 5-3.1s3.8 1 5 3.1"></path>
-                </svg>
-              }
-              @case ('fire') {
-                <svg viewBox="0 0 24 24">
-                  <path class="icon-fill" d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
-                  <path d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
-                  <path d="M12 18.2c-1.5 0-2.7-1.1-2.7-2.7 0-1.3.8-2.4 2.7-4.4 1.9 2 2.7 3.1 2.7 4.4 0 1.6-1.2 2.7-2.7 2.7Z"></path>
-                </svg>
-              }
-              @case ('wind') {
-                <svg viewBox="0 0 24 24">
-                  <path d="M3.5 8.2h10.7c1.2 0 2.1-.9 2.1-2s-.9-2-2-2c-.9 0-1.6.5-1.9 1.2"></path>
-                  <path d="M2.8 12h15.5c1.6 0 2.9 1.2 2.9 2.8s-1.3 2.9-2.9 2.9c-1.2 0-2.2-.7-2.6-1.8"></path>
-                  <path d="M5 16h7.6"></path>
-                  <path d="M6.5 19.5h5"></path>
-                </svg>
-              }
-              @case ('ice') {
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 3v18"></path>
-                  <path d="M4.2 7.5l15.6 9"></path>
-                  <path d="M19.8 7.5l-15.6 9"></path>
-                  <path d="M8.8 5.2 12 8.1l3.2-2.9"></path>
-                  <path d="M8.8 18.8 12 15.9l3.2 2.9"></path>
-                  <path d="m4.8 11.5 4.1-1.1-1.1-4.1"></path>
-                  <path d="m19.2 12.5-4.1 1.1 1.1 4.1"></path>
-                </svg>
-              }
-            }
-          </span>
-          <span>{{ element.label }}</span>
-        </button>
-      }
-    </div>
-
-    <aside class="info-callout" aria-label="Informatii despre ordinea cheilor">
-      <span class="info-icon" aria-hidden="true">!</span>
-      <p>
-        Numerele de deasupra codurilor <strong>SS/DS/SM/DM/SJ/DJ </strong> arata ordinea in care
-        trebuie pusa cheia.
-      </p>
-    </aside>
-  </section>
-
-  <section class="sequence-panel" aria-live="polite">
-    @if (selectedElementInfo(); as selected) {
-      <div class="sequence-header">
-        <div>
-          <p class="eyebrow">Primul element</p>
-          <h2 class="selected-title" [style.color]="selected.tone">
-            <span class="element-icon title-icon" [class]="selected.icon" aria-hidden="true">
-              @switch (selected.icon) {
-                @case ('earth') {
-                  <svg viewBox="0 0 24 24">
-                    <path class="icon-fill" d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
-                    <path d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
-                    <path d="M9.1 9.2 11.1 12.6 14.2 6.5"></path>
-                    <path d="M7 18c1.3-2.1 2.9-3.1 5-3.1s3.8 1 5 3.1"></path>
-                  </svg>
-                }
-                @case ('fire') {
-                  <svg viewBox="0 0 24 24">
-                    <path class="icon-fill" d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
-                    <path d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
-                    <path d="M12 18.2c-1.5 0-2.7-1.1-2.7-2.7 0-1.3.8-2.4 2.7-4.4 1.9 2 2.7 3.1 2.7 4.4 0 1.6-1.2 2.7-2.7 2.7Z"></path>
-                  </svg>
-                }
-                @case ('wind') {
-                  <svg viewBox="0 0 24 24">
-                    <path d="M3.5 8.2h10.7c1.2 0 2.1-.9 2.1-2s-.9-2-2-2c-.9 0-1.6.5-1.9 1.2"></path>
-                    <path d="M2.8 12h15.5c1.6 0 2.9 1.2 2.9 2.8s-1.3 2.9-2.9 2.9c-1.2 0-2.2-.7-2.6-1.8"></path>
-                    <path d="M5 16h7.6"></path>
-                    <path d="M6.5 19.5h5"></path>
-                  </svg>
-                }
-                @case ('ice') {
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 3v18"></path>
-                    <path d="M4.2 7.5l15.6 9"></path>
-                    <path d="M19.8 7.5l-15.6 9"></path>
-                    <path d="M8.8 5.2 12 8.1l3.2-2.9"></path>
-                    <path d="M8.8 18.8 12 15.9l3.2 2.9"></path>
-                    <path d="m4.8 11.5 4.1-1.1-1.1-4.1"></path>
-                    <path d="m19.2 12.5-4.1 1.1 1.1 4.1"></path>
-                  </svg>
-                }
-              }
-            </span>
-            <span>{{ selected.label }}</span>
-          </h2>
+  @if (activeTab() === 'temple') {
+    <div class="tab-content">
+      <section class="control-panel" aria-labelledby="app-title">
+        <div class="title-block">
+          <p class="eyebrow">Serpent Temple Helper</p>
+          <h1 id="app-title">Alege elementul initial</h1>
         </div>
 
-        <button class="ghost-button" type="button" (click)="resetSelection()">
-          Reseteaza
-        </button>
-      </div>
+        <div class="element-grid" aria-label="Elemente disponibile">
+          @for (element of elements; track element.key) {
+            <button
+              class="element-button"
+              type="button"
+              [class.active]="selectedElement() === element.key"
+              [style.--element-color]="element.tone"
+              [attr.aria-pressed]="selectedElement() === element.key"
+              (click)="selectElement(element.key)"
+            >
+              <span class="element-icon" [class]="element.icon" aria-hidden="true">
+                @switch (element.icon) {
+                  @case ('earth') {
+                    <svg viewBox="0 0 24 24">
+                      <path class="icon-fill" d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
+                      <path d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
+                      <path d="M9.1 9.2 11.1 12.6 14.2 6.5"></path>
+                      <path d="M7 18c1.3-2.1 2.9-3.1 5-3.1s3.8 1 5 3.1"></path>
+                    </svg>
+                  }
+                  @case ('fire') {
+                    <svg viewBox="0 0 24 24">
+                      <path class="icon-fill" d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
+                      <path d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
+                      <path d="M12 18.2c-1.5 0-2.7-1.1-2.7-2.7 0-1.3.8-2.4 2.7-4.4 1.9 2 2.7 3.1 2.7 4.4 0 1.6-1.2 2.7-2.7 2.7Z"></path>
+                    </svg>
+                  }
+                  @case ('wind') {
+                    <svg viewBox="0 0 24 24">
+                      <path d="M3.5 8.2h10.7c1.2 0 2.1-.9 2.1-2s-.9-2-2-2c-.9 0-1.6.5-1.9 1.2"></path>
+                      <path d="M2.8 12h15.5c1.6 0 2.9 1.2 2.9 2.8s-1.3 2.9-2.9 2.9c-1.2 0-2.2-.7-2.6-1.8"></path>
+                      <path d="M5 16h7.6"></path>
+                      <path d="M6.5 19.5h5"></path>
+                    </svg>
+                  }
+                  @case ('ice') {
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 3v18"></path>
+                      <path d="M4.2 7.5l15.6 9"></path>
+                      <path d="M19.8 7.5l-15.6 9"></path>
+                      <path d="M8.8 5.2 12 8.1l3.2-2.9"></path>
+                      <path d="M8.8 18.8 12 15.9l3.2 2.9"></path>
+                      <path d="m4.8 11.5 4.1-1.1-1.1-4.1"></path>
+                      <path d="m19.2 12.5-4.1 1.1 1.1 4.1"></path>
+                    </svg>
+                  }
+                }
+              </span>
+              <span>{{ element.label }}</span>
+            </button>
+          }
+        </div>
 
-      <div class="sequence-line element-sequence" aria-label="Ordinea elementelor">
-        @for (step of elementSequenceSteps(); track step.id) {
-          <span class="sequence-item">
-            <span class="step-index">{{ step.order }}</span>
-            <span class="sequence-token" [style.color]="step.tone">
-              {{ step.label }}
-            </span>
-          </span>
-        }
-      </div>
+        <aside class="info-callout" aria-label="Informatii despre ordinea cheilor">
+          <span class="info-icon" aria-hidden="true">!</span>
+          <p>
+            Numerele de deasupra codurilor <strong>SS/DS/SM/DM/SJ/DJ </strong> arata ordinea in care
+            trebuie pusa cheia.
+          </p>
+        </aside>
+      </section>
 
-      <div class="position-board" aria-label="Reprezentarea pozitiilor">
-        <div class="board-axis top-left">Stanga</div>
-        <div class="board-axis top-right">Dreapta</div>
-        <div class="board-guide horizontal upper"></div>
-        <div class="board-guide horizontal lower"></div>
-        <div class="board-guide vertical"></div>
-
-        @for (marker of boardMarkers(); track marker.code) {
-          <div
-            class="board-slot"
-            [class.left-side]="marker.column === 1"
-            [class.right-side]="marker.column === 2"
-            [style.grid-column]="marker.column"
-            [style.grid-row]="marker.row"
-          >
-            <div class="marker-label">
-              <span>{{ marker.sideLabel }}</span>
-              <strong>{{ marker.levelLabel }}</strong>
+      <section class="sequence-panel" aria-live="polite">
+        @if (selectedElementInfo(); as selected) {
+          <div class="sequence-header">
+            <div>
+              <p class="eyebrow">Primul element</p>
+              <h2 class="selected-title" [style.color]="selected.tone">
+                <span class="element-icon title-icon" [class]="selected.icon" aria-hidden="true">
+                  @switch (selected.icon) {
+                    @case ('earth') {
+                      <svg viewBox="0 0 24 24">
+                        <path class="icon-fill" d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
+                        <path d="M4 18h16L14.2 6.5l-3.1 6.1-2-3.4L4 18Z"></path>
+                        <path d="M9.1 9.2 11.1 12.6 14.2 6.5"></path>
+                        <path d="M7 18c1.3-2.1 2.9-3.1 5-3.1s3.8 1 5 3.1"></path>
+                      </svg>
+                    }
+                    @case ('fire') {
+                      <svg viewBox="0 0 24 24">
+                        <path class="icon-fill" d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
+                        <path d="M12 21c-3.4 0-6-2.5-6-6 0-2.8 1.7-4.8 3.3-6.7 1.1-1.3 2.1-2.5 2.4-4.3 3.5 2.5 6.3 6.4 6.3 10.8 0 3.6-2.6 6.2-6 6.2Z"></path>
+                        <path d="M12 18.2c-1.5 0-2.7-1.1-2.7-2.7 0-1.3.8-2.4 2.7-4.4 1.9 2 2.7 3.1 2.7 4.4 0 1.6-1.2 2.7-2.7 2.7Z"></path>
+                      </svg>
+                    }
+                    @case ('wind') {
+                      <svg viewBox="0 0 24 24">
+                        <path d="M3.5 8.2h10.7c1.2 0 2.1-.9 2.1-2s-.9-2-2-2c-.9 0-1.6.5-1.9 1.2"></path>
+                        <path d="M2.8 12h15.5c1.6 0 2.9 1.2 2.9 2.8s-1.3 2.9-2.9 2.9c-1.2 0-2.2-.7-2.6-1.8"></path>
+                        <path d="M5 16h7.6"></path>
+                        <path d="M6.5 19.5h5"></path>
+                      </svg>
+                    }
+                    @case ('ice') {
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 3v18"></path>
+                        <path d="M4.2 7.5l15.6 9"></path>
+                        <path d="M19.8 7.5l-15.6 9"></path>
+                        <path d="M8.8 5.2 12 8.1l3.2-2.9"></path>
+                        <path d="M8.8 18.8 12 15.9l3.2 2.9"></path>
+                        <path d="m4.8 11.5 4.1-1.1-1.1-4.1"></path>
+                        <path d="m19.2 12.5-4.1 1.1 1.1 4.1"></path>
+                      </svg>
+                    }
+                  }
+                </span>
+                <span>{{ selected.label }}</span>
+              </h2>
             </div>
 
-            <div class="board-marker">
-              <span class="marker-order">{{ marker.order }}</span>
-              <span class="marker-code">{{ marker.code }}</span>
-            </div>
+            <button class="ghost-button" type="button" (click)="resetSelection()">
+              Reseteaza
+            </button>
+          </div>
+
+          <div class="sequence-line element-sequence" aria-label="Ordinea elementelor">
+            @for (step of elementSequenceSteps(); track step.id) {
+              <span class="sequence-item">
+                <span class="step-index">{{ step.order }}</span>
+                <span class="sequence-token" [style.color]="step.tone">
+                  {{ step.label }}
+                </span>
+              </span>
+            }
+          </div>
+
+          <div class="position-board" aria-label="Reprezentarea pozitiilor">
+            <div class="board-axis top-left">Stanga</div>
+            <div class="board-axis top-right">Dreapta</div>
+            <div class="board-guide horizontal upper"></div>
+            <div class="board-guide horizontal lower"></div>
+            <div class="board-guide vertical"></div>
+
+            @for (marker of boardMarkers(); track marker.code) {
+              <div
+                class="board-slot"
+                [class.left-side]="marker.column === 1"
+                [class.right-side]="marker.column === 2"
+                [style.grid-column]="marker.column"
+                [style.grid-row]="marker.row"
+              >
+                <div class="marker-label">
+                  <span>{{ marker.sideLabel }}</span>
+                  <strong>{{ marker.levelLabel }}</strong>
+                </div>
+
+                <div class="board-marker">
+                  <span class="marker-order">{{ marker.order }}</span>
+                  <span class="marker-code">{{ marker.code }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <p class="eyebrow">Start</p>
+            <h2>Selecteaza Pamant, Foc, Vant sau Gheata (primul element).</h2>
+            <p>Secventa potrivita apare aici si ramane salvata in browser.</p>
           </div>
         }
+      </section>
+    </div>
+  } @else {
+    <section class="ctk-app" aria-labelledby="ctk-title">
+      <div class="ctk-board-panel">
+        <div class="ctk-title-row">
+          <div>
+            <p class="eyebrow">Catch the King Helper</p>
+          </div>
+
+          <div class="ctk-score" [class]="ctkStatusTone()">
+            <span>Score</span>
+            <strong>{{ ctkState().score }}</strong>
+          </div>
+        </div>
+
+        <div class="ctk-board" aria-label="Tabla Catch the King">
+          @for (cell of ctkCells(); track cell.idx) {
+            <button
+              class="ctk-cell"
+              type="button"
+              [class.revealed]="cell.state === 'revealed'"
+              [class.scored]="cell.scored"
+              [class.unscored]="cell.state === 'revealed' && !cell.scored"
+              [class.selected]="cell.selected"
+              [class.suggested]="cell.suggested"
+              [class.must-five]="cell.state === 'hidden' && cell.pFive >= 0.999"
+              [class.possible-five]="cell.state === 'hidden' && cell.pFive > 0.001 && cell.pFive < 0.999"
+              [class.not-five]="cell.state === 'hidden' && cell.pFive <= 0.001"
+              [class.safe-five]="cell.safeForFive"
+              [style.grid-column]="cell.col"
+              [style.grid-row]="cell.row"
+              [attr.aria-pressed]="cell.selected"
+              (mouseenter)="hoverCtkCell(cell.idx)"
+              (mouseleave)="hoverCtkCell(null)"
+              (click)="selectCtkCell(cell.idx)"
+            >
+              @if (cell.suggested) {
+                <span class="ctk-hint-badge">HINT !!</span>
+              }
+              @if (cell.state === 'revealed') {
+                <span class="ctk-card-value">{{ cell.value }}</span>
+                @if (cell.flashed) {
+                  <span class="ctk-chip">Palpaire</span>
+                }
+                @if (!cell.scored) {
+                  <span class="ctk-chip muted">{{ cell.catchable ? 'Catch' : 'Blocata' }}</span>
+                }
+              } @else {
+                <span class="ctk-cell-index">{{ cell.label }}</span>
+                @if (cell.certainValue) {
+                  <span class="ctk-prob strong">{{ cell.certainValue }}</span>
+                } @else if (cell.pFive > 0.001) {
+                  <span class="ctk-prob">5 {{ ctkPercent(cell.pFive) }}</span>
+                } @else if (cell.pKing > 0.001) {
+                  <span class="ctk-prob">K {{ ctkPercent(cell.pKing) }}</span>
+                }
+              }
+            </button>
+          }
+        </div>
       </div>
-    } @else {
-      <div class="empty-state">
-        <p class="eyebrow">Start</p>
-        <h2>Selecteaza Pamant, Foc, Vant sau Gheata (primul element).</h2>
-        <p>Secventa potrivita apare aici si ramane salvata in browser.</p>
-      </div>
-    }
-  </section>
+
+      <aside class="ctk-side-panel">
+        <div class="ctk-side-top">
+          <div class="ctk-hand-card">
+            <span>Carte curenta</span>
+            <strong>{{ ctkCurrentCard() ?? '-' }}</strong>
+          </div>
+
+          <div class="ctk-actions">
+            <button class="ghost-button" type="button" (click)="undoCtk()">Undo</button>
+            <button class="ghost-button" type="button" (click)="resetCtk()">Reset</button>
+          </div>
+        </div>
+
+        <div class="ctk-help-panel">
+          <span>Comenzi</span>
+          <strong>Primul pas: hover pe o celula, apoi apasa valoarea.</strong>
+          <p><kbd>1-5</kbd> <kbd>K / 6</kbd> dezvaluie fara palpaire. <kbd>Shift</kbd> + valoare marcheaza palpaire, adica exista un 5 vecin. Click pe o carte nepunctata o prinde.</p>
+        </div>
+
+        <div class="ctk-stats">
+          <div>
+            <span>Max posibil</span>
+            <strong>{{ ctkState().score + ctkMaxPossible() }}</strong>
+          </div>
+          <div>
+            <span>Bingo</span>
+            <strong>{{ ctkState().completedBingos.size }}/12</strong>
+          </div>
+          <div>
+            <span>Ascunse</span>
+            <strong>{{ ctkHiddenCount() }}</strong>
+          </div>
+        </div>
+
+        @if (ctkSuggestion(); as suggestion) {
+          <div class="ctk-suggestion">
+            <span>HINT !!</span>
+            <strong>Celula {{ suggestion.cellIdx + 1 }}</strong>
+            <em>E o idee buna.</em>
+            <p>{{ suggestion.reason }}</p>
+          </div>
+        }
+
+        <div class="ctk-deck-panel" aria-label="Pachetul tablei">
+          <div class="ctk-deck-header">
+            <span>Pachetul tablei</span>
+            <strong>Folosite / Total</strong>
+          </div>
+
+          <div class="ctk-remaining">
+            @for (card of ctkDeckSummary(); track card.value) {
+              <div class="ctk-deck-card">
+                <div>
+                  <strong>{{ card.value }}</strong>
+                  <small>{{ card.note }}</small>
+                </div>
+                <span>{{ card.used }}/{{ card.total }}</span>
+                <em>{{ card.remaining }} ramase</em>
+              </div>
+            }
+          </div>
+        </div>
+      </aside>
+    </section>
+  }
 </main>
