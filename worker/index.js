@@ -66,10 +66,10 @@ async function fetchDiscordMessages(env) {
   const messages = await response.json();
   const onlineMessages = Array.isArray(messages)
     ? messages
-        .filter((message) => messagePattern.test(message.content ?? ''))
+        .filter((message) => messagePattern.test(searchableMessageText(message)))
         .map((message) => ({
           id: message.id,
-          content: message.content,
+          content: displayMessageContent(message),
           createdAt: message.timestamp,
         }))
     : [];
@@ -100,4 +100,37 @@ function sanitizeLimit(limit) {
   }
 
   return Math.max(1, Math.min(100, Math.floor(parsed)));
+}
+
+function displayMessageContent(message) {
+  return searchableMessageText(message).trim().slice(0, 2000);
+}
+
+function searchableMessageText(message) {
+  const parts = [];
+
+  appendMessageText(parts, message);
+
+  for (const snapshot of message.message_snapshots ?? []) {
+    appendMessageText(parts, snapshot.message);
+  }
+
+  return parts.filter(Boolean).join('\n');
+}
+
+function appendMessageText(parts, message) {
+  if (!message) {
+    return;
+  }
+
+  parts.push(message.content ?? '');
+
+  for (const embed of message.embeds ?? []) {
+    parts.push(embed.title ?? '', embed.description ?? '');
+    parts.push(embed.author?.name ?? '', embed.footer?.text ?? '');
+
+    for (const field of embed.fields ?? []) {
+      parts.push(field.name ?? '', field.value ?? '');
+    }
+  }
 }
