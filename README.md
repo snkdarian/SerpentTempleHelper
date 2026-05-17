@@ -38,7 +38,13 @@ This will compile your project and store the build artifacts in the `dist/` dire
 
 ## Discord boss tracker backend
 
-Cloudflare Pages serves the API route from:
+Cloudflare Workers serves the API route from:
+
+```text
+worker/index.js
+```
+
+The same API is also available as a Cloudflare Pages Function from:
 
 ```text
 functions/api/discord-messages.js
@@ -66,7 +72,7 @@ The default value is:
 \bserver\s+is\s+(?:now\s+)?(?:back\s+)?online\b
 ```
 
-For local Pages testing, copy `.dev.vars.example` to `.dev.vars` and replace the values:
+For local Workers testing, copy `.dev.vars.example` to `.dev.vars` and replace the values:
 
 ```text
 DISCORD_BOT_TOKEN=your_bot_token
@@ -75,17 +81,24 @@ DISCORD_MESSAGE_PATTERN=\bserver\s+is\s+(?:now\s+)?(?:back\s+)?online\b
 DISCORD_MESSAGE_LIMIT=25
 ```
 
-Then build and run Pages locally:
+Then build and run Workers locally:
 
 ```bash
 npm run build
-npx wrangler pages dev dist/serpent-temple-helper/browser
+npx wrangler dev
 ```
 
 Test the endpoint:
 
 ```text
 http://127.0.0.1:8788/api/discord-messages
+```
+
+Deploy to the `workers.dev` app:
+
+```bash
+npm run build
+npx wrangler deploy
 ```
 
 ## Running unit tests
