@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { BossTrackerComponent } from './boss-tracker/boss-tracker.component';
 import { OkeyCardComponent } from './okey/okey-card.component';
 import { SmartTimerComponent } from './smart-timer/smart-timer.component';
 
 type ElementKey = 'pamant' | 'foc' | 'vant' | 'gheata';
 type SymbolCode = 'dj' | 'ss' | 'sm' | 'sj' | 'ds' | 'dm';
-type AppTab = 'temple' | 'next' | 'smart' | 'okey';
+type AppTab = 'temple' | 'next' | 'boss' | 'smart' | 'okey';
 type CtkCard = '1' | '2' | '3' | '4' | '5' | 'K';
 type CtkCellState = 'hidden' | 'revealed';
 
@@ -169,7 +170,7 @@ type CtkDeckSummary = {
 
 @Component({
   selector: 'app-root',
-  imports: [OkeyCardComponent, SmartTimerComponent],
+  imports: [BossTrackerComponent, OkeyCardComponent, SmartTimerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   host: {

@@ -39,6 +39,7 @@ testem.log
 dev-server*.log
 /typings
 __screenshots__/
+.dev.vars
 
 # System files
 .DS_Store

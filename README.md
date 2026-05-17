@@ -36,6 +36,58 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+## Discord boss tracker backend
+
+Cloudflare Pages serves the API route from:
+
+```text
+functions/api/discord-messages.js
+```
+
+Set these environment variables in Cloudflare Pages:
+
+```text
+DISCORD_BOT_TOKEN
+DISCORD_CHANNEL_ID
+DISCORD_MESSAGE_PATTERN
+DISCORD_MESSAGE_LIMIT
+```
+
+`DISCORD_MESSAGE_PATTERN` is the text filter used by the backend. It is a regex. The default matches:
+
+```text
+Server is now online
+Server is back online
+```
+
+The default value is:
+
+```text
+\bserver\s+is\s+(?:now\s+)?(?:back\s+)?online\b
+```
+
+For local Pages testing, copy `.dev.vars.example` to `.dev.vars` and replace the values:
+
+```text
+DISCORD_BOT_TOKEN=your_bot_token
+DISCORD_CHANNEL_ID=your_channel_id
+DISCORD_MESSAGE_PATTERN=\bserver\s+is\s+(?:now\s+)?(?:back\s+)?online\b
+DISCORD_MESSAGE_LIMIT=25
+```
+
+Then build and run Pages locally:
+
+```bash
+npm run build
+npx wrangler pages dev dist/serpent-temple-helper/browser
+```
+
+Test the endpoint:
+
+```text
+http://127.0.0.1:8788/api/discord-messages
+```
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:

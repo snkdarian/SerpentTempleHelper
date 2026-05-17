@@ -1,4 +1,4 @@
-<main class="app-shell" [class.smart-scroll-shell]="activeTab() === 'smart'">
+<main class="app-shell" [class.smart-scroll-shell]="activeTab() === 'smart' || activeTab() === 'boss'">
   <nav class="app-tabs" aria-label="Aplicatii disponibile">
     <button
       class="tab-button"
@@ -28,6 +28,15 @@
       disabled
     >
       Okey Card
+    </button>
+    <button
+      class="tab-button"
+      type="button"
+      [class.active]="activeTab() === 'boss'"
+      [attr.aria-current]="activeTab() === 'boss' ? 'page' : null"
+      (click)="selectTab('boss')"
+    >
+      Boss tracker
     </button>
     <button
       class="tab-button"
@@ -337,6 +346,8 @@
     </section>
   } @else if (activeTab() === 'smart') {
     <app-smart-timer />
+  } @else if (activeTab() === 'boss') {
+    <app-boss-tracker />
   } @else {
     <app-okey-card />
   }

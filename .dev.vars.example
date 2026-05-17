@@ -1,0 +1,9 @@
+DISCORD_BOT_TOKEN=paste_your_discord_bot_token_here
+DISCORD_CHANNEL_ID=paste_your_channel_id_here
+
+# Regex used to find the server-online message in the Discord channel.
+# Default matches: "Server is now online" and "Server is back online"
+DISCORD_MESSAGE_PATTERN=\bserver\s+is\s+(?:now\s+)?(?:back\s+)?online\b
+
+# Discord allows 1-100 messages per request.
+DISCORD_MESSAGE_LIMIT=25
