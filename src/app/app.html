@@ -1,4 +1,4 @@
-<main class="app-shell">
+<main class="app-shell" [class.smart-scroll-shell]="activeTab() === 'smart'">
   <nav class="app-tabs" aria-label="Aplicatii disponibile">
     <button
       class="tab-button"
@@ -22,10 +22,21 @@
       class="tab-button"
       type="button"
       [class.active]="activeTab() === 'okey'"
+      [class.disabled]="true"
       [attr.aria-current]="activeTab() === 'okey' ? 'page' : null"
-      (click)="selectTab('okey')"
+      aria-disabled="true"
+      disabled
     >
       Okey Card
+    </button>
+    <button
+      class="tab-button"
+      type="button"
+      [class.active]="activeTab() === 'smart'"
+      [attr.aria-current]="activeTab() === 'smart' ? 'page' : null"
+      (click)="selectTab('smart')"
+    >
+      Smart timer
     </button>
   </nav>
 
@@ -324,6 +335,8 @@
         </div>
       </aside>
     </section>
+  } @else if (activeTab() === 'smart') {
+    <app-smart-timer />
   } @else {
     <app-okey-card />
   }

@@ -1,0 +1,440 @@
+:host {
+  display: contents;
+}
+
+.smart-timer-app {
+  display: grid;
+  grid-template-columns: minmax(28rem, 1fr) minmax(20rem, 25rem);
+  gap: clamp(0.85rem, 1.7vw, 1.25rem);
+  align-items: start;
+  min-height: min-content;
+  overflow: visible;
+}
+
+.timer-main-panel,
+.settings-panel,
+.timer-card,
+.smart-empty-state {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(18, 18, 26, 0.72);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(18px);
+}
+
+.timer-main-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: clamp(0.75rem, 1.4vw, 1rem);
+  min-height: 0;
+  overflow: visible;
+  padding: clamp(0.85rem, 1.8vw, 1.25rem);
+}
+
+.settings-panel {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  min-height: 0;
+  overflow: visible;
+  padding: clamp(0.95rem, 1.8vw, 1.25rem);
+}
+
+.timer-header,
+.card-title-row,
+.status-row,
+.volume-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.34rem;
+  color: #a7aaa0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16rem;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.55rem, 2.6vw, 2.5rem);
+  line-height: 1;
+}
+
+h2 {
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
+  line-height: 1;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.primary-button,
+.ghost-button,
+.icon-button,
+.timer-alert button {
+  min-height: 2.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #f7f8ff;
+  cursor: pointer;
+  font-weight: 850;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0 1rem;
+  background:
+    linear-gradient(135deg, rgba(255, 230, 111, 0.28), rgba(25, 212, 82, 0.12)),
+    rgba(255, 255, 255, 0.08);
+}
+
+.ghost-button,
+.icon-button,
+.timer-alert button {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.primary-button:hover,
+.ghost-button:hover,
+.icon-button:hover,
+.timer-alert button:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  transform: translateY(-1px);
+}
+
+.primary-button:focus-visible,
+.ghost-button:focus-visible,
+.icon-button:focus-visible,
+.timer-alert button:focus-visible,
+.text-input:focus-visible,
+.select-field select:focus-visible,
+.toggle-row input:focus-visible,
+.volume-control input:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 3px;
+}
+
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
+.timer-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem;
+  border: 1px solid rgba(255, 230, 111, 0.42);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(255, 230, 111, 0.16), transparent),
+    rgba(255, 255, 255, 0.055);
+  color: #f2f0d0;
+}
+
+.timer-alert button {
+  min-height: 2rem;
+  padding: 0 0.7rem;
+}
+
+.timer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.5rem), 1fr));
+  gap: 0.75rem;
+  min-height: 0;
+  overflow: visible;
+  overscroll-behavior: contain;
+  padding-right: 0.15rem;
+}
+
+.timer-card {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  padding: 0.85rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(247, 248, 255, 0.08), transparent 72%),
+    rgba(255, 255, 255, 0.045);
+  box-shadow: none;
+}
+
+.timer-card.running {
+  border-color: rgba(25, 212, 82, 0.45);
+  box-shadow: inset 0 0 1.6rem rgba(25, 212, 82, 0.08);
+}
+
+.timer-card.done {
+  border-color: rgba(255, 230, 111, 0.55);
+  box-shadow: 0 0 1.6rem rgba(255, 230, 111, 0.16);
+}
+
+.field-label {
+  display: grid;
+  gap: 0.32rem;
+  min-width: 0;
+  width: 100%;
+}
+
+.field-label span,
+.volume-row span {
+  color: #a7aaa0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.text-input,
+.select-field select {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 8px;
+  background: rgba(6, 8, 16, 0.58);
+  color: #f7f8ff;
+  font-weight: 800;
+}
+
+.select-field {
+  display: grid;
+  gap: 0.34rem;
+}
+
+.select-field span {
+  color: #a7aaa0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.select-field select {
+  cursor: pointer;
+}
+
+.text-input.invalid {
+  border-color: #ff6b6b;
+  box-shadow: inset 0 0 1rem rgba(255, 48, 48, 0.13);
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  flex: 0 0 auto;
+  color: #d6d8cf;
+}
+
+.countdown-ring {
+  --progress: 0;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: min(14rem, 82%);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    conic-gradient(#ffe66f calc(var(--progress) * 1%), rgba(255, 255, 255, 0.11) 0),
+    rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 0 2rem rgba(255, 230, 111, 0.12),
+    inset 0 0 1.4rem rgba(255, 255, 255, 0.05);
+}
+
+.countdown-ring-core {
+  display: grid;
+  place-items: center;
+  width: 78%;
+  aspect-ratio: 1;
+  border-radius: inherit;
+  background: rgba(17, 16, 22, 0.92);
+}
+
+.countdown-ring-core span {
+  font-size: clamp(1.55rem, 4.2vw, 2.6rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.status-pill,
+.status-note {
+  display: inline-grid;
+  place-items: center;
+  min-height: 1.75rem;
+  padding: 0 0.55rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.status-pill {
+  background: rgba(255, 230, 111, 0.14);
+  color: #ffe66f;
+}
+
+.status-note {
+  background: rgba(25, 212, 82, 0.12);
+  color: #7fffa3;
+}
+
+.input-hint {
+  min-height: 1rem;
+  color: #a7aaa0;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.timer-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.timer-actions .primary-button,
+.timer-actions .ghost-button {
+  min-height: 2.45rem;
+  padding: 0 0.55rem;
+}
+
+.timer-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  color: #d6d8cf;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.toggle-row.large {
+  min-height: 3rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.92rem;
+}
+
+.toggle-row input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: #ffe66f;
+  flex: 0 0 auto;
+}
+
+.toggle-row span {
+  min-width: 0;
+}
+
+.volume-control {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 230, 111, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(255, 230, 111, 0.1), transparent),
+    rgba(255, 255, 255, 0.045);
+}
+
+.volume-row {
+  align-items: center;
+}
+
+.volume-row strong {
+  color: #ffe66f;
+  font-size: 1.2rem;
+}
+
+.volume-control input {
+  width: 100%;
+  accent-color: #ffe66f;
+}
+
+.smart-empty-state {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 0.9rem;
+  min-height: 16rem;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  box-shadow: none;
+}
+
+.smart-empty-state p:not(.eyebrow) {
+  max-width: 36rem;
+  color: #c9cbd3;
+  line-height: 1.55;
+}
+
+@media (max-width: 860px) {
+  .smart-timer-app {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .timer-main-panel {
+    min-height: 28rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .timer-header,
+  .card-title-row,
+  .status-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primary-button {
+    width: 100%;
+  }
+
+  .icon-button {
+    width: 100%;
+  }
+
+  .timer-actions,
+  .timer-options {
+    grid-template-columns: 1fr;
+  }
+
+  .countdown-ring {
+    width: min(13rem, 92%);
+  }
+}

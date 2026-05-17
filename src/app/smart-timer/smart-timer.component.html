@@ -1,0 +1,172 @@
+<section class="smart-timer-app" aria-labelledby="smart-timer-title">
+  <div class="timer-main-panel">
+    <div class="timer-header">
+      <div>
+        <p class="eyebrow">Smart timer</p>
+        <h1 id="smart-timer-title">Timers</h1>
+      </div>
+
+      <button class="primary-button" type="button" (click)="addTimer()">
+        <span aria-hidden="true">+</span>
+        Add timer
+      </button>
+    </div>
+
+    @if (notification.latestMessage(); as message) {
+      <div class="timer-alert" role="status">
+        <strong>{{ message }}</strong>
+        <button type="button" aria-label="Dismiss timer alert" (click)="notification.clearLatestMessage()">OK</button>
+      </div>
+    }
+
+    @if (hasTimers()) {
+      <div class="timer-grid" aria-live="polite">
+        @for (timer of visibleTimers(); track timer.id) {
+          <article class="timer-card" [class.running]="timer.status === 'running'" [class.done]="timer.status === 'done'">
+            <div class="card-title-row">
+              <label class="field-label">
+                <span>Name</span>
+                <input
+                  class="text-input"
+                  [ngModel]="timer.name"
+                  (ngModelChange)="updateName(timer, $event)"
+                  maxlength="32"
+                  [disabled]="timer.status === 'running'"
+                />
+              </label>
+
+              <button class="icon-button" type="button" aria-label="Remove timer" (click)="removeTimer(timer.id)">
+                X
+              </button>
+            </div>
+
+            <div
+              class="countdown-ring"
+              [style.--progress]="elapsedProgress(timer)"
+              [attr.aria-label]="'Remaining time ' + format(timer.remainingSeconds)"
+            >
+              <div class="countdown-ring-core">
+                <span>{{ format(timer.remainingSeconds) }}</span>
+              </div>
+            </div>
+
+            <div class="status-row">
+              <span class="status-pill">{{ statusLabel(timer) }}</span>
+              @if (timer.autoRestart) {
+                <span class="status-note">Auto-restart</span>
+              }
+            </div>
+
+            <label class="field-label duration-field">
+              <span>Duration</span>
+              <input
+                class="text-input"
+                inputmode="numeric"
+                placeholder="HH:MM:SS"
+                [ngModel]="durationInput(timer)"
+                (ngModelChange)="setDurationInput(timer, $event)"
+                (blur)="commitDuration(timer)"
+                [disabled]="timer.status === 'running'"
+                [class.invalid]="isDurationInvalid(timer)"
+              />
+            </label>
+
+            <p class="input-hint">{{ isDurationInvalid(timer) ? 'Use HH:MM:SS, MM:SS, or seconds.' : 'Example: 00:30:00' }}</p>
+
+            <div class="timer-actions">
+              <button class="primary-button" type="button" [disabled]="!canStart(timer)" (click)="startTimer(timer)">
+                Start
+              </button>
+              <button class="ghost-button" type="button" [disabled]="timer.status !== 'running'" (click)="pauseTimer(timer.id)">
+                Pause
+              </button>
+              <button class="ghost-button" type="button" [disabled]="timer.status === 'idle'" (click)="stopTimer(timer.id)">
+                Stop
+              </button>
+            </div>
+
+            <div class="timer-options">
+              <label class="toggle-row">
+                <input
+                  type="checkbox"
+                  [ngModel]="timer.autoRestart"
+                  (ngModelChange)="toggleAutoRestart(timer, $event)"
+                />
+                <span>Auto</span>
+              </label>
+              <label class="toggle-row">
+                <input type="checkbox" [ngModel]="timer.notifyEnabled" (ngModelChange)="toggleNotify(timer, $event)" />
+                <span>Notify</span>
+              </label>
+              <label class="toggle-row">
+                <input type="checkbox" [ngModel]="timer.soundEnabled" (ngModelChange)="toggleSound(timer, $event)" />
+                <span>Sound</span>
+              </label>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <section class="smart-empty-state">
+        <p class="eyebrow">Start</p>
+        <h2>No timers yet</h2>
+        <p>Create your first countdown and choose whether it should notify, ring, or restart automatically.</p>
+        <button class="primary-button" type="button" (click)="addTimer()">
+          <span aria-hidden="true">+</span>
+          Add timer
+        </button>
+      </section>
+    }
+  </div>
+
+  <aside class="settings-panel" aria-labelledby="smart-settings-title">
+    <div>
+      <p class="eyebrow">Defaults</p>
+      <h2 id="smart-settings-title">Settings</h2>
+    </div>
+
+    <label class="toggle-row large">
+      <input type="checkbox" [ngModel]="settings().notifyEnabled" (ngModelChange)="updateDefaultNotify($event)" />
+      <span>Notify by default</span>
+    </label>
+
+    <label class="toggle-row large">
+      <input type="checkbox" [ngModel]="settings().soundEnabled" (ngModelChange)="updateDefaultSound($event)" />
+      <span>Sound by default</span>
+    </label>
+
+    <label class="toggle-row large">
+      <input type="checkbox" [ngModel]="settings().autoRestart" (ngModelChange)="updateDefaultAutoRestart($event)" />
+      <span>Auto-restart by default</span>
+    </label>
+
+    <div class="volume-control">
+      <label class="select-field">
+        <span>Alarm preset</span>
+        <select
+          [ngModel]="settings().alarmPreset"
+          (ngModelChange)="updateAlarmPreset($event)"
+          aria-label="Alarm preset"
+        >
+          @for (preset of alarmPresets; track preset.value) {
+            <option [value]="preset.value">{{ preset.label }}</option>
+          }
+        </select>
+      </label>
+
+      <div class="volume-row">
+        <span>Alarm volume</span>
+        <strong>{{ volumePercent() }}%</strong>
+      </div>
+      <input
+        type="range"
+        min="0"
+        max="200"
+        step="5"
+        [ngModel]="volumePercent()"
+        (ngModelChange)="updateAlarmVolume($event)"
+        aria-label="Alarm volume"
+      />
+    </div>
+  </aside>
+</section>

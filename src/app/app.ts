@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { OkeyCardComponent } from './okey/okey-card.component';
+import { SmartTimerComponent } from './smart-timer/smart-timer.component';
 
 type ElementKey = 'pamant' | 'foc' | 'vant' | 'gheata';
 type SymbolCode = 'dj' | 'ss' | 'sm' | 'sj' | 'ds' | 'dm';
-type AppTab = 'temple' | 'next' | 'okey';
+type AppTab = 'temple' | 'next' | 'smart' | 'okey';
 type CtkCard = '1' | '2' | '3' | '4' | '5' | 'K';
 type CtkCellState = 'hidden' | 'revealed';
 
@@ -168,7 +169,7 @@ type CtkDeckSummary = {
 
 @Component({
   selector: 'app-root',
-  imports: [OkeyCardComponent],
+  imports: [OkeyCardComponent, SmartTimerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   host: {
@@ -317,6 +318,10 @@ export class App {
   }
 
   protected selectTab(tab: AppTab): void {
+    if (tab === 'okey') {
+      return;
+    }
+
     this.activeTab.set(tab);
   }
 
