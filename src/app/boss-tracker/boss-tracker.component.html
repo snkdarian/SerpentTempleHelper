@@ -27,8 +27,8 @@
                 @if (row.boss.imageAsset) {
                   <img
                     [ngSrc]="row.boss.imageAsset"
-                    width="88"
-                    height="88"
+                    [width]="row.boss.imageWidth"
+                    [height]="row.boss.imageHeight"
                     [alt]="row.boss.name + ' icon'"
                   />
                 } @else {

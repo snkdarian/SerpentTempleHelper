@@ -7,6 +7,10 @@ export type BossDefinition = {
   map: string;
   /** Optional image path from /public, for example "/assets/bosses/name.png". */
   imageAsset: string;
+  /** Intrinsic image width used by NgOptimizedImage. UI frame stays fixed. */
+  imageWidth: number;
+  /** Intrinsic image height used by NgOptimizedImage. UI frame stays fixed. */
+  imageHeight: number;
   /** Respawn interval counted from the latest server-online message. */
   respawnMinutes: number;
   /** Optional delay after server-online before this boss starts its cycle. */

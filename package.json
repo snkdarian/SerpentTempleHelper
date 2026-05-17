@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:worker": "wrangler dev",
     "build": "ng build",
+    "deploy:worker": "npm run build && wrangler deploy",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

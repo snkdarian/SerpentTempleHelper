@@ -26,6 +26,8 @@ export class BossTrackerStore {
       name: name.trim() || `Boss ${this.bossesSignal().length + 1}`,
       map,
       imageAsset,
+      imageWidth: 88,
+      imageHeight: 88,
       respawnMinutes: this.sanitizeMinutes(respawnMinutes, 1, 24 * 60),
       offsetMinutes: this.sanitizeMinutes(offsetMinutes, 0, 24 * 60),
       enabled: true,
@@ -167,6 +169,8 @@ export class BossTrackerStore {
       name: boss.name?.trim() || 'Boss',
       map: boss.map?.trim() || 'Unknown map',
       imageAsset: this.resolveImageAsset(boss.imageAsset),
+      imageWidth: this.sanitizeImageSize(boss.imageWidth),
+      imageHeight: this.sanitizeImageSize(boss.imageHeight),
       respawnMinutes: this.sanitizeMinutes(boss.respawnMinutes, 1, 24 * 60),
       offsetMinutes: this.sanitizeMinutes(boss.offsetMinutes, 0, 24 * 60),
       enabled: Boolean(boss.enabled),
@@ -248,5 +252,15 @@ export class BossTrackerStore {
     }
 
     return `${BOSS_ASSET_BASE_PATH}${trimmed}`;
+  }
+
+  private sanitizeImageSize(value: number): number {
+    const parsed = Math.floor(Number(value));
+
+    if (!Number.isFinite(parsed)) {
+      return 88;
+    }
+
+    return Math.max(1, Math.min(2048, parsed));
   }
 }

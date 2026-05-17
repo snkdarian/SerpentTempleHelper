@@ -4,8 +4,10 @@ import { BossTrackerStore } from './boss-tracker.store';
 
 type SyncStatus = 'idle' | 'loading' | 'success' | 'error';
 
-const DISCORD_POLL_MS = 30_000;
+const DISCORD_POLL_MS = 10 * 60 * 1000;
 const CLOCK_TICK_MS = 15_000;
+const DISCORD_MESSAGES_PATH = '/api/discord-messages';
+const LOCAL_WORKER_DISCORD_MESSAGES_URL = 'https://metin2-helper.eternya2.workers.dev/api/discord-messages';
 
 @Component({
   selector: 'app-boss-tracker',
@@ -20,7 +22,7 @@ export class BossTrackerComponent implements OnInit, OnDestroy {
   private clockHandle: ReturnType<typeof setInterval> | null = null;
 
   protected readonly syncStatus = signal<SyncStatus>('idle');
-  protected readonly syncMessage = signal('Auto sync pornit: verific /api/discord-messages la fiecare 30 secunde.');
+  protected readonly syncMessage = signal('Auto sync pornit: verific /api/discord-messages la fiecare 10 minute.');
   protected readonly nowEpochMs = signal(Date.now());
 
   protected readonly bosses = this.store.bosses;
@@ -78,7 +80,7 @@ export class BossTrackerComponent implements OnInit, OnDestroy {
 
   private async syncDiscordMessages(): Promise<void> {
     try {
-      const response = await fetch('/api/discord-messages', {
+      const response = await fetch(this.discordMessagesUrl(), {
         headers: { Accept: 'application/json' },
       });
 
@@ -96,5 +98,15 @@ export class BossTrackerComponent implements OnInit, OnDestroy {
       this.syncStatus.set('error');
       this.syncMessage.set('Asteapta endpointul /api/discord-messages.');
     }
+  }
+
+  private discordMessagesUrl(): string {
+    const location = globalThis.location;
+
+    if (location?.hostname === 'localhost' && location.port === '4200') {
+      return LOCAL_WORKER_DISCORD_MESSAGES_URL;
+    }
+
+    return DISCORD_MESSAGES_PATH;
   }
 }

@@ -4,13 +4,15 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development server
 
-To start a local development server, run:
+To start the Angular development server, run:
 
 ```bash
-ng serve
+npm start
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+When the app runs on `localhost:4200`, it calls the deployed Worker API directly.
 
 ## Code scaffolding
 
@@ -85,20 +87,19 @@ Then build and run Workers locally:
 
 ```bash
 npm run build
-npx wrangler dev
+npm run start:worker
 ```
 
 Test the endpoint:
 
 ```text
-http://127.0.0.1:8788/api/discord-messages
+http://127.0.0.1:8787/api/discord-messages
 ```
 
 Deploy to the `workers.dev` app:
 
 ```bash
-npm run build
-npx wrangler deploy
+npm run deploy:worker
 ```
 
 ## Running unit tests
