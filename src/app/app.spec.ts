@@ -36,4 +36,13 @@ describe('App', () => {
     expect(compiled.textContent).toContain('dj');
     expect(compiled.textContent).toContain('dm');
   });
+
+  it('should render the Okey Card tab', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('Okey Card');
+  });
 });

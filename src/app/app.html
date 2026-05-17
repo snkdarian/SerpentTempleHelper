@@ -18,6 +18,15 @@
     >
       Catch the King Helper
     </button>
+    <button
+      class="tab-button"
+      type="button"
+      [class.active]="activeTab() === 'okey'"
+      [attr.aria-current]="activeTab() === 'okey' ? 'page' : null"
+      (click)="selectTab('okey')"
+    >
+      Okey Card
+    </button>
   </nav>
 
   @if (activeTab() === 'temple') {
@@ -190,7 +199,7 @@
         }
       </section>
     </div>
-  } @else {
+  } @else if (activeTab() === 'next') {
     <section class="ctk-app" aria-labelledby="ctk-title">
       <div class="ctk-board-panel">
         <div class="ctk-title-row">
@@ -315,5 +324,7 @@
         </div>
       </aside>
     </section>
+  } @else {
+    <app-okey-card />
   }
 </main>

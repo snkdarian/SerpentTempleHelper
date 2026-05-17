@@ -1,0 +1,444 @@
+:host {
+  display: block;
+  min-height: 0;
+}
+
+.okey-app {
+  display: grid;
+  grid-template-columns: minmax(30rem, 1fr) minmax(22rem, 28rem);
+  gap: clamp(0.85rem, 1.7vw, 1.25rem);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.okey-capture-panel,
+.okey-side-panel {
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(18, 18, 26, 0.72);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(18px);
+}
+
+.okey-capture-panel {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(12rem, 1fr) auto auto;
+  gap: 0.75rem;
+  overflow: hidden;
+  padding: clamp(0.85rem, 1.8vw, 1.25rem);
+}
+
+.okey-title-row,
+.okey-capture-actions,
+.okey-confirm-actions,
+.okey-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.okey-title-row h1 {
+  max-width: none;
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
+  line-height: 1.05;
+}
+
+.okey-score {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 5.8rem;
+  padding: 0.62rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.okey-score span,
+.okey-stats span,
+.okey-recommendation span,
+.okey-panel-header span,
+.okey-slot span {
+  color: #a7aaa0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.okey-score strong {
+  color: #ffe66f;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.okey-capture-actions {
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.primary-action {
+  border-color: rgba(255, 230, 111, 0.48);
+  background: rgba(255, 230, 111, 0.15);
+  color: #ffe66f;
+}
+
+.danger-action {
+  border-color: rgba(255, 107, 107, 0.5);
+  background: rgba(255, 107, 107, 0.12);
+  color: #ffb1b1;
+}
+
+.ghost-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.okey-status {
+  min-height: 2.15rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid rgba(25, 212, 82, 0.28);
+  border-radius: 8px;
+  background: rgba(25, 212, 82, 0.08);
+  color: #d9ffe3;
+  font-size: 0.86rem;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
+.okey-status.paused {
+  border-color: rgba(255, 230, 111, 0.4);
+  background: rgba(255, 230, 111, 0.12);
+  color: #fff4ba;
+}
+
+.okey-preview {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(6, 8, 16, 0.58);
+}
+
+.okey-preview video {
+  display: none;
+}
+
+.okey-preview canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 14rem;
+  object-fit: contain;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.okey-preview-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.45rem;
+  padding: 1rem;
+  background: rgba(6, 8, 16, 0.72);
+  color: #f7f8ff;
+  pointer-events: none;
+  text-align: center;
+}
+
+.okey-preview-overlay.selecting {
+  border: 2px dashed rgba(255, 230, 111, 0.72);
+  background: rgba(6, 8, 16, 0.42);
+}
+
+.okey-preview-overlay strong {
+  color: #ffe66f;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 950;
+}
+
+.okey-preview-overlay span {
+  max-width: 34rem;
+  color: #d6d8cf;
+  font-size: 0.9rem;
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.okey-hand-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.okey-slot {
+  --card-color: #a7aaa0;
+  display: grid;
+  gap: 0.34rem;
+  min-width: 0;
+  padding: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--card-color) 36%, rgba(255, 255, 255, 0.14));
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--card-color) 14%, transparent), transparent),
+    rgba(255, 255, 255, 0.05);
+}
+
+.okey-slot-preview {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  min-height: 3.6rem;
+  max-height: 7rem;
+  object-fit: contain;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(6, 8, 16, 0.64);
+}
+
+.okey-slot.uncertain {
+  border-color: #ffe66f;
+  box-shadow: 0 0 0 2px rgba(255, 230, 111, 0.22);
+}
+
+.okey-slot.manual {
+  border-color: rgba(92, 168, 255, 0.82);
+  box-shadow: 0 0 0 2px rgba(92, 168, 255, 0.24);
+}
+
+.okey-slot.changed {
+  border-color: rgba(255, 230, 111, 0.9);
+  box-shadow: 0 0 0 2px rgba(255, 230, 111, 0.28);
+}
+
+.okey-slot.transitioning {
+  border-color: rgba(92, 168, 255, 0.78);
+  box-shadow: 0 0 0 2px rgba(92, 168, 255, 0.2);
+}
+
+.okey-slot.background {
+  border-color: rgba(255, 230, 111, 0.9);
+  background:
+    linear-gradient(180deg, rgba(255, 230, 111, 0.14), transparent),
+    rgba(255, 255, 255, 0.05);
+}
+
+.okey-slot strong {
+  color: var(--card-color);
+  font-size: clamp(1.2rem, 2vw, 1.75rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.okey-slot small {
+  color: #c9cbd3;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.okey-debug-list {
+  display: grid;
+  gap: 0.16rem;
+}
+
+.okey-debug-list span {
+  overflow: hidden;
+  color: #ffe66f;
+  font-size: 0.66rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.okey-slot select {
+  min-width: 0;
+  min-height: 2.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: #181822;
+  color: #f7f8ff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.okey-side-panel {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(0.85rem, 1.6vw, 1.15rem);
+}
+
+.okey-recommendation,
+.okey-panel,
+.okey-stats div {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.okey-recommendation {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.75rem;
+  border-color: rgba(255, 230, 111, 0.34);
+  background:
+    linear-gradient(90deg, rgba(255, 230, 111, 0.12), transparent),
+    rgba(255, 255, 255, 0.045);
+}
+
+.okey-recommendation.play {
+  border-color: rgba(25, 212, 82, 0.38);
+}
+
+.okey-recommendation.discard {
+  border-color: rgba(92, 168, 255, 0.38);
+}
+
+.okey-recommendation strong {
+  color: #ffe66f;
+  font-size: 1.18rem;
+  line-height: 1.15;
+}
+
+.okey-recommendation em {
+  width: fit-content;
+  padding: 0.2rem 0.42rem;
+  border: 1px solid rgba(92, 168, 255, 0.32);
+  border-radius: 6px;
+  background: rgba(92, 168, 255, 0.12);
+  color: #a9d1ff;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.okey-recommendation p {
+  color: #f2f0d0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.okey-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.okey-stats div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.55rem;
+}
+
+.okey-stats strong,
+.okey-panel-header strong {
+  color: #ffffff;
+  font-size: 1.08rem;
+}
+
+.okey-panel {
+  display: grid;
+  gap: 0.58rem;
+  padding: 0.7rem;
+}
+
+.okey-panel-header strong {
+  color: #ffe66f;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.okey-list {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.okey-list-item {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.48rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.okey-list-item strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 0.92rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.okey-list-item span,
+.okey-empty {
+  color: #a7aaa0;
+  font-size: 0.78rem;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
+.okey-deck-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.okey-deck-card {
+  --card-color: #f7f8ff;
+  display: grid;
+  place-items: center;
+  min-height: 1.8rem;
+  border: 1px solid color-mix(in srgb, var(--card-color) 45%, rgba(255, 255, 255, 0.12));
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--card-color) 13%, rgba(255, 255, 255, 0.05));
+  color: var(--card-color);
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.okey-deck-card.used {
+  opacity: 0.28;
+}
+
+.okey-deck-card.in-hand {
+  box-shadow: inset 0 -2px 0 #ffffff;
+}
+
+@media (max-width: 860px) {
+  .okey-app {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .okey-preview canvas {
+    min-height: 18rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .okey-hand-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .okey-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .okey-deck-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

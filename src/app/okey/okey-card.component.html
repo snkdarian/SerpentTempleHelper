@@ -1,0 +1,216 @@
+<section class="okey-app" aria-labelledby="okey-title">
+  <div class="okey-capture-panel">
+    <div class="okey-title-row">
+      <div>
+        <p class="eyebrow">Okey Card</p>
+        <h1 id="okey-title">Auto helper</h1>
+      </div>
+
+      <div class="okey-score">
+        <span>Score</span>
+        <strong>{{ session().totalScore }}</strong>
+      </div>
+    </div>
+
+    <div class="okey-capture-actions">
+      @if (captureState() === 'idle') {
+        <button class="ghost-button primary-action" type="button" (click)="startCapture()">Start capture</button>
+      } @else {
+        <button class="ghost-button danger-action" type="button" (click)="stopCapture()">Stop</button>
+      }
+      <button class="ghost-button primary-action" type="button" [disabled]="captureState() === 'idle'" (click)="reselectRoi()">
+        Select card area
+      </button>
+      <button class="ghost-button" type="button" (click)="undoOkey()">Undo</button>
+      <button class="ghost-button" type="button" (click)="resetOkey()">Reset</button>
+    </div>
+
+    <p class="okey-status" [class.paused]="captureState() === 'paused' || captureState() === 'awaiting-initial'">
+      {{ captureMessage() }} Area: {{ roiLabel() }}.
+    </p>
+
+    <div class="okey-preview">
+      <video #captureVideo muted playsinline></video>
+      <canvas
+        #captureCanvas
+        aria-label="Screen capture preview"
+        (pointerdown)="onPointerDown($event)"
+        (pointermove)="onPointerMove($event)"
+        (pointerup)="onPointerUp($event)"
+        (pointercancel)="onPointerCancel()"
+        (lostpointercapture)="onPointerCancel()"
+      ></canvas>
+      @if (captureState() === 'idle') {
+        <div class="okey-preview-overlay">
+          <strong>Start capture</strong>
+          <span>In the browser picker, select the game window or the monitor where the game is visible.</span>
+        </div>
+      }
+    </div>
+
+    <div class="okey-hand-row" aria-label="Detected hand">
+      @for (slot of handSlots(); track slot.index) {
+        <div
+          class="okey-slot"
+          [class.pending]="slot.pending"
+          [class.manual]="slot.manual"
+          [class.changed]="slot.changed"
+          [class.transitioning]="slot.transitioning"
+          [class.background]="slot.background"
+          [class.uncertain]="slot.detection && slot.detection.confidence < 0.62"
+          [style.--card-color]="slot.pending?.color === 'yellow' ? '#ffe66f' : slot.pending?.color === 'red' ? '#ff6b6b' : slot.pending?.color === 'blue' ? '#5ca8ff' : '#a7aaa0'"
+        >
+          @if (slot.previewUrl) {
+            <img class="okey-slot-preview" [src]="slot.previewUrl" alt="" />
+          }
+          <span>Slot {{ slot.index + 1 }}</span>
+          <strong>{{ cardLabel(slot.pending ?? slot.card) }}</strong>
+          <small>
+            {{
+              slot.manual
+                ? 'manual locked'
+                : slot.background
+                  ? 'card change detected'
+                  : slot.changed
+                  ? (slot.detection ? (slot.detection.confidence * 100).toFixed(0) + '% / changed / ' + slot.detection.reason : 'changed')
+                  : slot.transitioning
+                    ? 'waiting for new card'
+                  : slot.detection
+                    ? (slot.detection.confidence * 100).toFixed(0) + '% / ' + slot.detection.reason
+                    : 'manual'
+            }}
+          </small>
+          @if (slot.detection && slot.detection.alternatives.length) {
+            <div class="okey-debug-list">
+              @for (alt of slot.detection.alternatives.slice(0, 3); track cardId(alt.card)) {
+                <span>{{ cardLabel(alt.card) }} {{ (alt.confidence * 100).toFixed(0) }}%</span>
+              }
+            </div>
+          }
+          <select [value]="slot.pending ? cardId(slot.pending) : ''" (change)="setPendingCard(slot.index, $any($event.target).value)">
+            <option value="">Unknown</option>
+            @for (card of cards; track cardId(card)) {
+              <option [value]="cardId(card)">{{ cardLabel(card) }}</option>
+            }
+          </select>
+        </div>
+      }
+    </div>
+
+    <div class="okey-confirm-actions">
+      @if (session().hand.length !== 5) {
+        <button class="ghost-button primary-action" type="button" [disabled]="!canConfirmPending()" (click)="confirmInitial()">
+          Confirm initial hand
+        </button>
+      } @else if (captureState() !== 'idle') {
+        <button class="ghost-button primary-action" type="button" [disabled]="!canConfirmPending()" (click)="resumeWithPending()">
+          Confirm correction and resume
+        </button>
+      }
+    </div>
+  </div>
+
+  <aside class="okey-side-panel">
+    @if (solver().recommendation; as rec) {
+      <section class="okey-recommendation" [class.play]="rec.action === 'play'" [class.discard]="rec.action === 'discard-one'">
+        <span>Best move</span>
+        @if (usingPendingRecommendation()) {
+          <em>Updated from current detected hand</em>
+        }
+        <strong>{{ rec.headline }}</strong>
+        @for (line of rec.reasoning; track line) {
+          <p>{{ line }}</p>
+        }
+      </section>
+    }
+
+    <div class="okey-stats">
+      <div>
+        <span>Seen</span>
+        <strong>{{ 24 - solver().remainingDeck.length }}/24</strong>
+      </div>
+      <div>
+        <span>Deck</span>
+        <strong>{{ solver().remainingDeck.length }}</strong>
+      </div>
+      <div>
+        <span>Combos</span>
+        <strong>{{ session().scored.length }}</strong>
+      </div>
+    </div>
+
+    <section class="okey-panel">
+      <div class="okey-panel-header">
+        <span>Playable combos</span>
+        <strong>{{ solver().playOptions.length }}</strong>
+      </div>
+
+      <div class="okey-list">
+        @for (play of solver().playOptions.slice(0, 4); track play.combo.description) {
+          <div class="okey-list-item">
+            <strong>{{ cardsLabel(play.combo.cards) }}</strong>
+            <span>{{ play.combo.points }} pts / EV {{ play.totalEv.toFixed(1) }}</span>
+          </div>
+        } @empty {
+          <p class="okey-empty">No combo ready.</p>
+        }
+      </div>
+    </section>
+
+    <section class="okey-panel">
+      <div class="okey-panel-header">
+        <span>Discard ranking</span>
+        <strong>1-card EV</strong>
+      </div>
+
+      <div class="okey-list">
+        @for (discard of solver().singleDiscards.slice(0, 5); track cardId(discard.drop)) {
+          <div class="okey-list-item">
+            <strong>Drop {{ cardLabel(discard.drop) }}</strong>
+            <span>EV {{ discard.ev.toFixed(1) }} / Hit {{ (discard.probability * 100).toFixed(0) }}%</span>
+          </div>
+        } @empty {
+          <p class="okey-empty">Fill the hand to rank discards.</p>
+        }
+      </div>
+    </section>
+
+    <section class="okey-panel">
+      <div class="okey-panel-header">
+        <span>Near combos</span>
+        <strong>Needs</strong>
+      </div>
+
+      <div class="okey-list">
+        @for (near of solver().nearCombos; track near.description) {
+          <div class="okey-list-item">
+            <strong>{{ cardsLabel(near.pair) }}</strong>
+            <span>{{ cardsNeedLabel(near.needCards.slice(0, 3)) }} / EV {{ near.ev.toFixed(1) }}</span>
+          </div>
+        } @empty {
+          <p class="okey-empty">No strong pair target yet.</p>
+        }
+      </div>
+    </section>
+
+    <section class="okey-panel">
+      <div class="okey-panel-header">
+        <span>Deck memory</span>
+        <strong>Remaining</strong>
+      </div>
+
+      <div class="okey-deck-grid">
+        @for (entry of deckSummary(); track cardId(entry.card)) {
+          <span
+            class="okey-deck-card"
+            [class.used]="!entry.remaining"
+            [class.in-hand]="entry.inHand"
+            [style.--card-color]="entry.card.color === 'yellow' ? '#ffe66f' : entry.card.color === 'red' ? '#ff6b6b' : '#5ca8ff'"
+          >
+            {{ cardLabel(entry.card) }}
+          </span>
+        }
+      </div>
+    </section>
+  </aside>
+</section>

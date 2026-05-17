@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { OkeyCardComponent } from './okey/okey-card.component';
 
 type ElementKey = 'pamant' | 'foc' | 'vant' | 'gheata';
 type SymbolCode = 'dj' | 'ss' | 'sm' | 'sj' | 'ds' | 'dm';
-type AppTab = 'temple' | 'next';
+type AppTab = 'temple' | 'next' | 'okey';
 type CtkCard = '1' | '2' | '3' | '4' | '5' | 'K';
 type CtkCellState = 'hidden' | 'revealed';
 
@@ -167,6 +168,7 @@ type CtkDeckSummary = {
 
 @Component({
   selector: 'app-root',
+  imports: [OkeyCardComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   host: {
