@@ -145,7 +145,7 @@ export class AlarmService {
     oscillator.type = type;
     oscillator.frequency.setValueAtTime(frequency, start);
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, 0.18 * volume), start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, 0.34 * volume), start + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
 
     oscillator.connect(gain);

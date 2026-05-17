@@ -32,6 +32,7 @@ export interface TimerSettings {
   autoRestart: boolean;
   alarmVolume: number;
   alarmPreset: AlarmPreset;
+  alertBeforeSeconds: number;
 }
 
 export interface StoredTimerState {

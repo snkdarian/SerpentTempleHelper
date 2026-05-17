@@ -22,19 +22,29 @@ export class NotificationService {
   timerCompleted(timer: SmartTimer): void {
     const message = `${timer.name} finished`;
 
+    this.sendTimerMessage(timer, message, `smart-timer-${timer.id}`);
+  }
+
+  timerEndingSoon(timer: SmartTimer): void {
+    const message = `${timer.name} entering final seconds`;
+
+    this.sendTimerMessage(timer, message, `smart-timer-warning-${timer.id}`);
+  }
+
+  clearLatestMessage(): void {
+    this.latestMessage.set(null);
+  }
+
+  private sendTimerMessage(timer: SmartTimer, message: string, tag: string): void {
     this.latestMessage.set(message);
 
     if (timer.notifyEnabled && document.hidden && this.supportsBrowserNotifications() && Notification.permission === 'granted') {
       new Notification('SmartTimer', {
         body: message,
-        tag: `smart-timer-${timer.id}`,
+        tag,
         requireInteraction: false,
       });
     }
-  }
-
-  clearLatestMessage(): void {
-    this.latestMessage.set(null);
   }
 
   private supportsBrowserNotifications(): boolean {

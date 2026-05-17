@@ -10,6 +10,7 @@ const DEFAULT_SETTINGS: TimerSettings = {
   autoRestart: false,
   alarmVolume: 0.6,
   alarmPreset: 'classic',
+  alertBeforeSeconds: 0,
 };
 
 const ALARM_PRESETS: AlarmPreset[] = [
@@ -240,6 +241,7 @@ export class TimerStoreService {
       autoRestart: Boolean(settings.autoRestart),
       alarmVolume: Math.max(0, Math.min(2, Number(settings.alarmVolume) || 0)),
       alarmPreset: ALARM_PRESETS.includes(settings.alarmPreset) ? settings.alarmPreset : DEFAULT_SETTINGS.alarmPreset,
+      alertBeforeSeconds: Math.max(0, Math.min(3600, Math.floor(Number(settings.alertBeforeSeconds) || 0))),
     };
   }
 

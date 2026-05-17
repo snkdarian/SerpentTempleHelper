@@ -172,6 +172,7 @@ input:disabled {
 }
 
 .timer-card {
+  --timer-tone: #19d452;
   display: grid;
   align-content: start;
   gap: 0.7rem;
@@ -182,14 +183,29 @@ input:disabled {
   box-shadow: none;
 }
 
+.timer-card.tone-green,
+.countdown-ring.tone-green {
+  --timer-tone: #19d452;
+}
+
+.timer-card.tone-yellow,
+.countdown-ring.tone-yellow {
+  --timer-tone: #ffe66f;
+}
+
+.timer-card.tone-red,
+.countdown-ring.tone-red {
+  --timer-tone: #ff6b6b;
+}
+
 .timer-card.running {
-  border-color: rgba(25, 212, 82, 0.45);
-  box-shadow: inset 0 0 1.6rem rgba(25, 212, 82, 0.08);
+  border-color: color-mix(in srgb, var(--timer-tone) 52%, transparent);
+  box-shadow: inset 0 0 1.6rem color-mix(in srgb, var(--timer-tone) 12%, transparent);
 }
 
 .timer-card.done {
-  border-color: rgba(255, 230, 111, 0.55);
-  box-shadow: 0 0 1.6rem rgba(255, 230, 111, 0.16);
+  border-color: color-mix(in srgb, var(--timer-tone) 62%, transparent);
+  box-shadow: 0 0 1.6rem color-mix(in srgb, var(--timer-tone) 18%, transparent);
 }
 
 .field-label {
@@ -252,6 +268,7 @@ input:disabled {
 
 .countdown-ring {
   --progress: 0;
+  --timer-tone: #19d452;
   display: grid;
   place-items: center;
   justify-self: center;
@@ -259,10 +276,10 @@ input:disabled {
   aspect-ratio: 1;
   border-radius: 999px;
   background:
-    conic-gradient(#ffe66f calc(var(--progress) * 1%), rgba(255, 255, 255, 0.11) 0),
+    conic-gradient(var(--timer-tone) calc(var(--progress) * 1%), rgba(255, 255, 255, 0.11) 0),
     rgba(255, 255, 255, 0.05);
   box-shadow:
-    0 0 2rem rgba(255, 230, 111, 0.12),
+    0 0 2rem color-mix(in srgb, var(--timer-tone) 16%, transparent),
     inset 0 0 1.4rem rgba(255, 255, 255, 0.05);
 }
 
@@ -294,8 +311,8 @@ input:disabled {
 }
 
 .status-pill {
-  background: rgba(255, 230, 111, 0.14);
-  color: #ffe66f;
+  background: color-mix(in srgb, var(--timer-tone) 14%, transparent);
+  color: var(--timer-tone);
 }
 
 .status-note {
@@ -383,6 +400,10 @@ input:disabled {
 .volume-control input {
   width: 100%;
   accent-color: #ffe66f;
+}
+
+.test-alarm-button {
+  width: 100%;
 }
 
 .smart-empty-state {

@@ -38,8 +38,10 @@ export class TimerEngineService {
 
   private tick(forcePersist = false): void {
     const now = Date.now();
+    const settings = this.store.settings();
+    const alertBeforeSeconds = settings.alertBeforeSeconds;
     let shouldPersist = forcePersist;
-    const completedTimers: SmartTimer[] = [];
+    const alertTimers: { timer: SmartTimer; kind: 'completed' | 'warning' }[] = [];
 
     const nextTimers = this.store.timers().map((timer) => {
       if (timer.status !== 'running' || !timer.startedAtEpochMs) {
@@ -56,15 +58,24 @@ export class TimerEngineService {
       if (timer.autoRestart) {
         const cycles = Math.floor(elapsed / duration);
         const remainder = elapsed % duration;
+        const remainingSeconds = remainder === 0 ? duration : duration - remainder;
         const nextTimer = {
           ...timer,
-          remainingSeconds: remainder === 0 ? duration : duration - remainder,
+          remainingSeconds,
           lastNotifiedCycle: timer.lastNotifiedCycle,
         };
 
-        if (cycles > timer.lastNotifiedCycle) {
+        if (alertBeforeSeconds > 0) {
+          const alertCycle = cycles + 1;
+
+          if (remainingSeconds <= alertBeforeSeconds && alertCycle > timer.lastNotifiedCycle) {
+            nextTimer.lastNotifiedCycle = alertCycle;
+            alertTimers.push({ timer: nextTimer, kind: 'warning' });
+            shouldPersist = true;
+          }
+        } else if (cycles > timer.lastNotifiedCycle) {
           nextTimer.lastNotifiedCycle = cycles;
-          completedTimers.push(nextTimer);
+          alertTimers.push({ timer: nextTimer, kind: 'completed' });
           shouldPersist = true;
         }
 
@@ -72,6 +83,20 @@ export class TimerEngineService {
       }
 
       const remainingSeconds = Math.max(0, timer.remainingSeconds - elapsed);
+
+      if (alertBeforeSeconds > 0 && remainingSeconds > 0 && remainingSeconds <= alertBeforeSeconds && timer.lastNotifiedCycle === 0) {
+        const warning = {
+          ...timer,
+          remainingSeconds,
+          startedAtEpochMs: now,
+          lastNotifiedCycle: 1,
+        };
+
+        alertTimers.push({ timer: warning, kind: 'warning' });
+        shouldPersist = true;
+
+        return warning;
+      }
 
       if (remainingSeconds === 0) {
         const completed = {
@@ -82,8 +107,8 @@ export class TimerEngineService {
           lastNotifiedCycle: 1,
         };
 
-        if (timer.lastNotifiedCycle === 0) {
-          completedTimers.push(completed);
+        if (alertBeforeSeconds === 0 && timer.lastNotifiedCycle === 0) {
+          alertTimers.push({ timer: completed, kind: 'completed' });
         }
 
         shouldPersist = true;
@@ -100,11 +125,15 @@ export class TimerEngineService {
 
     this.store.applyEngineSnapshot(nextTimers, shouldPersist);
 
-    for (const timer of completedTimers) {
-      this.notificationService.timerCompleted(timer);
+    for (const alert of alertTimers) {
+      if (alert.kind === 'warning') {
+        this.notificationService.timerEndingSoon(alert.timer);
+      } else {
+        this.notificationService.timerCompleted(alert.timer);
+      }
 
-      if (timer.soundEnabled) {
-        void this.alarmService.play(this.store.settings().alarmVolume, this.store.settings().alarmPreset);
+      if (alert.timer.soundEnabled) {
+        void this.alarmService.play(settings.alarmVolume, settings.alarmPreset);
       }
     }
   }

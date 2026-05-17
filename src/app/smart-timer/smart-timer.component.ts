@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AlarmService } from './alarm.service';
 import { NotificationService } from './notification.service';
 import { AlarmPreset, SmartTimer } from './timer.model';
 import { TimerEngineService } from './timer-engine.service';
 import { TimerStoreService } from './timer-store.service';
 import { formatDuration, parseDurationInput } from './time-utils';
+
+type TimerTone = 'green' | 'yellow' | 'red';
 
 @Component({
   selector: 'app-smart-timer',
@@ -16,6 +19,7 @@ import { formatDuration, parseDurationInput } from './time-utils';
 export class SmartTimerComponent {
   private readonly store = inject(TimerStoreService);
   private readonly engine = inject(TimerEngineService);
+  private readonly alarm = inject(AlarmService);
   protected readonly notification = inject(NotificationService);
 
   protected readonly timers = this.store.timers;
@@ -37,7 +41,7 @@ export class SmartTimerComponent {
     { value: 'bell', label: 'Bell' },
     { value: 'rise', label: 'Rising tones' },
     { value: 'beacon', label: 'Beacon' },
-    { value: 'ios', label: 'new-style' },
+    { value: 'ios', label: 'iOS-style' },
   ];
 
   protected addTimer(): void {
@@ -124,6 +128,17 @@ export class SmartTimerComponent {
     this.store.updateSettings({ alarmPreset: value });
   }
 
+  protected updateAlertBeforeSeconds(value: number | string): void {
+    this.store.updateSettings({ alertBeforeSeconds: Number(value) });
+  }
+
+  protected async testAlarm(): Promise<void> {
+    const settings = this.settings();
+
+    await this.alarm.unlock();
+    await this.alarm.play(settings.alarmVolume, settings.alarmPreset);
+  }
+
   protected format(seconds: number): string {
     return formatDuration(seconds);
   }
@@ -138,6 +153,33 @@ export class SmartTimerComponent {
 
   protected elapsedProgress(timer: SmartTimer): number {
     return 100 - this.progress(timer);
+  }
+
+  protected timerTone(timer: SmartTimer): TimerTone {
+    if (timer.status === 'done') {
+      return 'red';
+    }
+
+    if (timer.durationSeconds <= 0) {
+      return 'green';
+    }
+
+    const alertBeforeSeconds = this.settings().alertBeforeSeconds;
+    const remainingPercent = (timer.remainingSeconds / timer.durationSeconds) * 100;
+
+    if (alertBeforeSeconds > 0) {
+      return timer.remainingSeconds <= alertBeforeSeconds ? 'red' : remainingPercent <= 50 ? 'yellow' : 'green';
+    }
+
+    if (remainingPercent <= 20) {
+      return 'red';
+    }
+
+    if (remainingPercent <= 50) {
+      return 'yellow';
+    }
+
+    return 'green';
   }
 
   protected statusLabel(timer: SmartTimer): string {
