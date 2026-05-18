@@ -1,71 +1,58 @@
-<section class="boss-tracker" aria-labelledby="boss-tracker-title">
-  <header class="tracker-header">
-    <div>
-      <h1 id="boss-tracker-title">Boss tracker</h1>
-    </div>
-
-    <div class="feed-status" [class.error]="syncStatus() === 'error'" [class.live]="syncStatus() === 'success'">
-      <span>Discord feed</span>
-      <strong>{{ syncStatus() === 'error' ? 'Waiting' : 'Live' }}</strong>
-      <small>{{ syncMessage() }}</small>
+<section class="boss-tracker" aria-label="Boss tracker">
+  <header class="tracker-header" aria-label="Discord sync status">
+    <div class="sync-chip" [class.error]="syncStatus() === 'error'" [class.live]="syncStatus() === 'success'">
+      <span>{{ syncStatus() === 'error' ? 'Sync waiting' : 'Synced' }}</span>
+      <i aria-hidden="true"></i>
+      <small>Last server start hour</small>
+      <strong>{{ latestOnlineEvent() ? formatTime(latestOnlineEvent()!.createdAtEpochMs) : '--:--' }}</strong>
     </div>
   </header>
 
-  <div class="boss-table-wrap">
-    <div class="boss-table" role="table" aria-label="Boss respawn table">
-      <div class="boss-table-header" role="row">
-        <div role="columnheader">Boss</div>
-        <div role="columnheader">Respawn time</div>
-        <div role="columnheader">Next respawn</div>
-      </div>
-
-      <div class="boss-table-body" role="rowgroup">
-        @for (row of trackerRows(); track row.boss.id) {
-          <article class="boss-table-row" [class.disabled]="!row.boss.enabled" role="row">
-            <div class="boss-cell" role="cell">
-              <div class="boss-image-frame">
-                @if (row.boss.imageAsset) {
-                  <img
-                    [ngSrc]="row.boss.imageAsset"
-                    [width]="row.boss.imageWidth"
-                    [height]="row.boss.imageHeight"
-                    [alt]="row.boss.name + ' icon'"
-                  />
-                } @else {
-                  <span class="boss-mark" aria-hidden="true">
-                    <span class="boss-mark-core"></span>
-                  </span>
-                }
-              </div>
-
-              <div class="boss-copy">
-                <strong>{{ row.boss.name }}</strong>
-                <span>{{ row.boss.map }}</span>
-              </div>
+  <div class="boss-grid-wrap">
+    <div class="boss-grid" aria-label="Boss respawn cards">
+      @for (row of trackerRows(); track row.boss.id) {
+        <article class="boss-card">
+          <div class="boss-card-main">
+            <div class="boss-image-frame">
+              @if (row.boss.imageAsset) {
+                <img
+                  [ngSrc]="row.boss.imageAsset"
+                  [width]="row.boss.imageWidth"
+                  [height]="row.boss.imageHeight"
+                  [alt]="row.boss.name + ' icon'"
+                />
+              } @else {
+                <span class="boss-mark" aria-hidden="true">
+                  <span class="boss-mark-core"></span>
+                </span>
+              }
             </div>
 
-            <div class="respawn-cell" role="cell">
+            <div class="boss-copy">
+              <strong>{{ row.boss.name }}</strong>
+              <span>{{ row.boss.map }}</span>
+            </div>
+          </div>
+
+          <div class="boss-card-meta">
+            <div>
+              <span>Respawn</span>
               <strong>{{ formatRespawn(row.boss.respawnMinutes) }}</strong>
             </div>
 
-            <div class="next-cell" role="cell">
+            <div class="next-spawn">
+              <span>Next</span>
               <strong>{{ formatTime(row.nextSpawnEpochMs) }}</strong>
               @if (row.minutesUntil != null) {
                 <small>in {{ row.minutesUntil }} min</small>
               } @else {
-                <small>waiting for trigger</small>
+                <small>waiting</small>
               }
             </div>
-          </article>
-        }
-      </div>
+          </div>
+        </article>
+      }
     </div>
   </div>
 
-  <footer class="tracker-footer" aria-label="Latest Discord trigger">
-    <div class="last-online">
-      <span>Last server start hour</span>
-      <strong>{{ latestOnlineEvent() ? formatTime(latestOnlineEvent()!.createdAtEpochMs) : '--:--' }}</strong>
-    </div>
-  </footer>
 </section>

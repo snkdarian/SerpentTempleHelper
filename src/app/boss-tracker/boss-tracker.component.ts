@@ -90,10 +90,10 @@ export class BossTrackerComponent implements OnInit, OnDestroy {
 
       const payload = (await response.json()) as unknown;
       const messages = Array.isArray(payload) ? payload : [];
-      const imported = this.store.importDiscordMessages(messages);
+      this.store.importDiscordMessages(messages);
 
       this.syncStatus.set('success');
-      this.syncMessage.set(imported ? `${imported} mesaje online importate automat.` : 'Auto sync activ.');
+      this.syncMessage.set('Auto sync activ.');
     } catch {
       this.syncStatus.set('error');
       this.syncMessage.set('Asteapta endpointul /api/discord-messages.');

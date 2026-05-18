@@ -14,7 +14,11 @@ export class BossTrackerStore {
 
   readonly bosses = this.bossesSignal.asReadonly();
   readonly events = this.eventsSignal.asReadonly();
-  readonly latestOnlineEvent = computed(() => this.eventsSignal()[0] ?? null);
+  readonly latestOnlineEvent = computed(() => {
+    const events = this.eventsSignal();
+
+    return events.find((event) => event.source === 'admin-override') ?? events[0] ?? null;
+  });
 
   constructor() {
     this.restore();
@@ -77,12 +81,14 @@ export class BossTrackerStore {
     const imported = messages
       .map((message) => this.toOnlineEvent(message))
       .filter((event): event is BossOnlineEvent => event != null);
+    const existingEvents = this.eventsSignal().filter((event) => event.source !== 'admin-override');
 
     if (!imported.length) {
+      this.setEvents(existingEvents);
       return 0;
     }
 
-    this.setEvents([...imported, ...this.eventsSignal()]);
+    this.setEvents([...imported, ...existingEvents]);
 
     return imported.length;
   }
@@ -118,8 +124,9 @@ export class BossTrackerStore {
 
   private toOnlineEvent(message: DiscordMessageDto): BossOnlineEvent | null {
     const content = message.content?.trim() ?? '';
+    const isAdminOverride = message.source === 'admin-override' || message.override === true;
 
-    if (!content || !this.isOnlineMessage(content)) {
+    if (!content || (!isAdminOverride && !this.isOnlineMessage(content))) {
       return null;
     }
 
@@ -134,7 +141,7 @@ export class BossTrackerStore {
       id: message.id ?? this.createId('discord'),
       content,
       createdAtEpochMs,
-      source: 'discord-api',
+      source: isAdminOverride ? 'admin-override' : 'discord-api',
     };
   }
 

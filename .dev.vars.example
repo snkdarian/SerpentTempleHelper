@@ -7,3 +7,9 @@ DISCORD_MESSAGE_PATTERN=\bserver\s+is\s+(?:now\s+)?(?:back\s+)?online\b
 
 # Discord allows 1-100 messages per request.
 DISCORD_MESSAGE_LIMIT=25
+
+# Optional manual boss tracker override. Set this in Cloudflare Pages when Discord sync needs correction.
+# Use HH:mm, for example: 21:30. The latest occurrence of that time is used.
+# Leave empty, delete it, or set to "off" to disable the override.
+BOSS_ONLINE_OVERRIDE=
+BOSS_ONLINE_OVERRIDE_TIME_ZONE=Europe/Bucharest

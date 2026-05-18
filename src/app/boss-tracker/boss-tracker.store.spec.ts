@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { BossTrackerStore } from './boss-tracker.store';
 
 describe('BossTrackerStore', () => {
@@ -6,9 +5,7 @@ describe('BossTrackerStore', () => {
 
   beforeEach(() => {
     localStorage.clear();
-
-    TestBed.configureTestingModule({});
-    store = TestBed.inject(BossTrackerStore);
+    store = new BossTrackerStore();
   });
 
   it('uses online messages as the respawn anchor', () => {
@@ -63,5 +60,34 @@ describe('BossTrackerStore', () => {
     expect(imported).toBe(1);
     expect(store.events()).toHaveLength(1);
     expect(store.events()[0].id).toBe('1');
+  });
+
+  it('uses the admin override ahead of newer Discord messages', () => {
+    store.importDiscordMessages([
+      {
+        id: 'discord-newer',
+        content: 'Server is now online',
+        createdAt: '2026-05-17T16:00:00.000Z',
+      },
+      {
+        id: 'admin-override',
+        content: 'Server is now online (admin override)',
+        createdAt: '2026-05-17T14:02:00.000Z',
+        source: 'admin-override',
+        override: true,
+      },
+    ]);
+
+    expect(store.latestOnlineEvent()?.id).toBe('admin-override');
+
+    store.importDiscordMessages([
+      {
+        id: 'discord-newer',
+        content: 'Server is now online',
+        createdAt: '2026-05-17T16:00:00.000Z',
+      },
+    ]);
+
+    expect(store.latestOnlineEvent()?.id).toBe('discord-newer');
   });
 });

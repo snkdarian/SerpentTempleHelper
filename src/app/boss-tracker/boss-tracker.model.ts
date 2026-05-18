@@ -23,7 +23,7 @@ export type BossOnlineEvent = {
   id: string;
   content: string;
   createdAtEpochMs: number;
-  source: 'manual' | 'discord-api';
+  source: 'manual' | 'discord-api' | 'admin-override';
 };
 
 export type BossTrackerState = {
@@ -37,4 +37,6 @@ export type DiscordMessageDto = {
   content?: string;
   createdAt?: string;
   timestamp?: string;
+  source?: BossOnlineEvent['source'];
+  override?: boolean;
 };

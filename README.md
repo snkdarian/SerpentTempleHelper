@@ -59,6 +59,8 @@ DISCORD_BOT_TOKEN
 DISCORD_CHANNEL_ID
 DISCORD_MESSAGE_PATTERN
 DISCORD_MESSAGE_LIMIT
+BOSS_ONLINE_OVERRIDE
+BOSS_ONLINE_OVERRIDE_TIME_ZONE
 ```
 
 `DISCORD_MESSAGE_PATTERN` is the text filter used by the backend. It is a regex. The default matches:
@@ -81,7 +83,25 @@ DISCORD_BOT_TOKEN=your_bot_token
 DISCORD_CHANNEL_ID=your_channel_id
 DISCORD_MESSAGE_PATTERN=\bserver\s+is\s+(?:now\s+)?(?:back\s+)?online\b
 DISCORD_MESSAGE_LIMIT=25
+BOSS_ONLINE_OVERRIDE=
+BOSS_ONLINE_OVERRIDE_TIME_ZONE=Europe/Bucharest
 ```
+
+`BOSS_ONLINE_OVERRIDE` is optional. For no-redeploy edits, create a Cloudflare KV namespace and bind it to the Pages/Worker project as:
+
+```text
+BOSS_TRACKER_CONFIG
+```
+
+Then set a KV key named `BOSS_ONLINE_OVERRIDE` when you need to force the boss tracker anchor time. Use `HH:mm`, for example:
+
+```text
+21:30
+```
+
+`HH:mm` is interpreted in `BOSS_ONLINE_OVERRIDE_TIME_ZONE`, defaulting to `Europe/Bucharest`, as the latest occurrence of that time. You can also set `BOSS_ONLINE_OVERRIDE_TIME_ZONE` as a KV key if needed.
+
+While this value is set, it has priority over Discord messages. Delete the KV key, leave it empty, or set it to `off` to return to normal Discord sync. Environment variables with the same names still work as a fallback, but KV is the better option for changes from the Cloudflare dashboard without redeploying.
 
 Then build and run Workers locally:
 
