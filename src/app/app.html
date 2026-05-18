@@ -33,8 +33,11 @@
       class="tab-button"
       type="button"
       [class.active]="activeTab() === 'boss'"
+      [class.disabled]="true"
       [attr.aria-current]="activeTab() === 'boss' ? 'page' : null"
       (click)="selectTab('boss')"
+      aria-disabled="true"
+      disabled
     >
       Boss tracker
     </button>
